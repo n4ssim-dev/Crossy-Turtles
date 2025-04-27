@@ -18,15 +18,29 @@ scoreboard = Scoreboard()
 screen.onkeypress(lambda: player.move_player(),"Up")
 
 game_is_on = True
+
 while game_is_on:
     player_item = player.player
-    time.sleep(0.1)
+    car_list = car.cars
+    player_position = player_item.xcor()
 
+    time.sleep(0.05)
+
+    car.create_car()
+    car.move_cars()
     scoreboard.write_score()
 
     screen.update()
-    if player_item.ycor() == 280:
+
+    if player_item.ycor() >= 280:
         player.reset_position()
         scoreboard.increment_score()
+        car.clear_cars()
+
+    for car_item in car_list:
+        if car_item.distance(player_item) < 20:
+            scoreboard.game_over()
+            game_is_on = False
+            break
 
 screen.exitonclick()
